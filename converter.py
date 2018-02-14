@@ -23,7 +23,6 @@ if infileName.endswith('.csv') and outfileName.endswith('.json'):
             outfile.write('[')
         else:
             outfile.write(',')
-            #comma delimters
 
         lineValues = line.replace('\n','').split(',')
         lineData = {}
@@ -35,6 +34,7 @@ elif infileName.endswith('.json') and outfileName.endswith('.csv'):
     #Convert JSON to CSV
     infile  =  open(infileName, "r")
     jsonPairs = ast.literal_eval(infile.read())
+
     #agregate the data to calculate columns 
     columns = set()
     for lineJSON in jsonPairs:
@@ -45,7 +45,11 @@ elif infileName.endswith('.json') and outfileName.endswith('.csv'):
     outfile = open(outfileName, "w")
     outfile.write(','.join(columns))
     for lineJSON in jsonPairs:
+        #finds each columns corrosponding value
         lineData = map(lambda column:lineJSON[column],columns)
         outfile.write('\n')
         outfile.write(','.join(lineData))
-    
+else:
+    raise Exception('Needs both a JSON and CSV file')
+
+print("File Created: " + outfileName)
