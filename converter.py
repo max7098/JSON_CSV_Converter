@@ -1,4 +1,5 @@
 import sys
+import ast
 
 #Get file names
 if len(sys.argv)<3:
@@ -30,3 +31,21 @@ if infileName.endswith('.csv') and outfileName.endswith('.json'):
             lineData[columns[i]]=lineValues[i]
         outfile.write(str(lineData))
     outfile.write(']')
+elif infileName.endswith('.json') and outfileName.endswith('.csv'): 
+    #Convert JSON to CSV
+    infile  =  open(infileName, "r")
+    jsonPairs = ast.literal_eval(infile.read())
+    #agregate the data to calculate columns 
+    columns = set()
+    for lineJSON in jsonPairs:
+        columns.update(lineJSON.keys())
+    columns = list(columns)
+
+    #input data in the csv
+    outfile = open(outfileName, "w")
+    outfile.write(','.join(columns))
+    for lineJSON in jsonPairs:
+        lineData = map(lambda column:lineJSON[column],columns)
+        outfile.write('\n')
+        outfile.write(','.join(lineData))
+    
